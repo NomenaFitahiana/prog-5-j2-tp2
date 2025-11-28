@@ -1,5 +1,5 @@
 package com.school.HEI.entity;
 
-public enum State {
+public enum RentedState {
     GOOD, DAMAGED, LOST
 }

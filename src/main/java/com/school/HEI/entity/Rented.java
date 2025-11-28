@@ -18,6 +18,6 @@ public class Rented {
     private String name;
     private double value;
     private String description;
-    private State state;
+    private RentedState state;
     private boolean available;
 }

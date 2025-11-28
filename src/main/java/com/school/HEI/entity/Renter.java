@@ -1,6 +1,5 @@
 package com.school.HEI.entity;
 
-import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -20,5 +19,4 @@ public class Renter {
     private RenterType type;
     private String contact;
     private String address;
-    private List<Rented> rentedProperties;
 }

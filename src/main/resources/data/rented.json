@@ -1,0 +1,18 @@
+[
+  {
+    "id": "aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "name": "Projector Epson X200",
+    "value": 5000.0,
+    "description": "Video projector",
+    "state": "GOOD",
+    "available": false
+  },
+  {
+    "id": "bbbbbbb2-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    "name": "Laptop Dell Inspiron",
+    "value": 10000.0,
+    "description": "Student-use laptop",
+    "state": "GOOD",
+    "available": true
+  }
+]

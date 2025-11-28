@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +29,14 @@ public class Location {
     private double remainingAmount = 0.0;
     private Renter renter;
     private Rented rentedProperty;
+
+    
     private List<Payment> payments = new ArrayList<>();
+
+    @JsonSetter(nulls = Nulls.AS_EMPTY)
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments != null ? payments : new ArrayList<>();
+    }
 
     public void changeStatus() {
         if (returnDate != null && remainingAmount == 0) {

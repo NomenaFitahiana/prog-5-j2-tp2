@@ -2,11 +2,12 @@ package com.school.HEI.repository;
 
 import com.school.HEI.entity.Location;
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+@Slf4j
 public class LocationRepository extends JsonRepository<Location> {
 
     public LocationRepository(String filePath) {
@@ -15,11 +16,12 @@ public class LocationRepository extends JsonRepository<Location> {
     }
 
     public List<Location> findAll() {
-
+        log.debug("Fetching all locations");
         return readAll();
     }
 
     public Location findById(UUID id) {
+        log.debug("Searching for location {}", id);
         return readAll().stream()
                 .filter(l -> l.getId().equals(id))
                 .findFirst()
@@ -27,6 +29,7 @@ public class LocationRepository extends JsonRepository<Location> {
     }
 
     public void save(Location location) {
+        log.debug("Saving location {}", location.getId());
         final List<Location> all = readAll();
         all.removeIf(l -> l.getId().equals(location.getId()));
         all.add(location);
@@ -34,8 +37,9 @@ public class LocationRepository extends JsonRepository<Location> {
     }
 
     public void delete(UUID id) {
-        List<Location> all = readAll();
-        all = all.stream().filter(l -> !l.getId().equals(id)).collect(Collectors.toList());
+        log.debug("Deleting location {}", id);
+        final List<Location> all = readAll();
+        all.removeIf(l -> l.getId().equals(id));
         saveAll(all);
     }
 }

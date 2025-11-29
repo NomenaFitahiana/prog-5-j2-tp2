@@ -1,6 +1,7 @@
 package com.school.HEI.service;
 
 import com.school.HEI.entity.Rented;
+import com.school.HEI.exception.BadRequestException;
 import com.school.HEI.exception.ResourceNotFoundException;
 import com.school.HEI.repository.RentedRepository;
 
@@ -29,31 +30,45 @@ public class RentedService implements ServiceInterface<Rented> {
     public Rented getById(UUID id) {
         log.info("Fetching rented item {}", id);
         final Rented rented = repository.findById(id);
+
         if (rented == null)
             throw new ResourceNotFoundException("Rented item not found: " + id);
+
         return rented;
     }
 
     @Override
     public Rented create(Rented rented) {
         log.info("Creating rented item");
+
+        if (rented.getName() == null || rented.getName().isBlank())
+            throw new BadRequestException("Name is required");
+
         rented.setId(UUID.randomUUID());
         repository.save(rented);
+
+        log.info("Rented item {} created", rented.getId());
         return rented;
     }
 
     @Override
     public Rented update(Rented rented) {
         log.info("Updating rented item {}", rented.getId());
+
         getById(rented.getId());
         repository.save(rented);
+
+        log.info("Rented item {} updated", rented.getId());
         return rented;
     }
 
     @Override
     public void delete(UUID id) {
         log.info("Deleting rented item {}", id);
+
         getById(id);
         repository.delete(id);
+
+        log.info("Rented item {} deleted", id);
     }
 }

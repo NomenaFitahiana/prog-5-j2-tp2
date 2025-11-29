@@ -2,21 +2,26 @@ package com.school.HEI.repository;
 
 import com.school.HEI.entity.Rented;
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+@Slf4j
 public class RentedRepository extends JsonRepository<Rented> {
 
     public RentedRepository(String filePath) {
-        super(filePath, new TypeReference<List<Rented>>() { });
+        super(filePath, new TypeReference<List<Rented>>() {
+        });
     }
 
     public List<Rented> findAll() {
+        log.debug("Fetching all rented items");
         return readAll();
     }
 
     public Rented findById(UUID id) {
+        log.debug("Searching rented item {}", id);
         return readAll().stream()
                 .filter(r -> r.getId().equals(id))
                 .findFirst()
@@ -24,6 +29,7 @@ public class RentedRepository extends JsonRepository<Rented> {
     }
 
     public void save(Rented rented) {
+        log.debug("Saving rented item {}", rented.getId());
         final List<Rented> all = readAll();
         all.removeIf(r -> r.getId().equals(rented.getId()));
         all.add(rented);
@@ -31,8 +37,9 @@ public class RentedRepository extends JsonRepository<Rented> {
     }
 
     public void delete(UUID id) {
-        List<Rented> all = readAll();
-        all = all.stream().filter(l -> !l.getId().equals(id)).collect(Collectors.toList());
+        log.debug("Deleting rented item {}", id);
+        final List<Rented> all = readAll();
+        all.removeIf(r -> r.getId().equals(id));
         saveAll(all);
     }
 }

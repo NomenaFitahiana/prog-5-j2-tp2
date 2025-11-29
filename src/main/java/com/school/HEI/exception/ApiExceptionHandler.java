@@ -16,8 +16,7 @@ public class ApiExceptionHandler {
                 "timestamp", LocalDateTime.now(),
                 "status", status.value(),
                 "error", status.getReasonPhrase(),
-                "message", message
-        );
+                "message", message);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -30,6 +29,12 @@ public class ApiExceptionHandler {
     public ResponseEntity<?> handleBadRequest(BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(buildBody(e.getMessage(), HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(RepositoryException.class)
+    public ResponseEntity<?> handleRepository(RepositoryException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(buildBody("Internal storage error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @ExceptionHandler(RuntimeException.class)

@@ -30,16 +30,18 @@ public class LocationServiceImpl implements ServiceInterface<Location> {
     public Location getById(UUID id) {
         log.info("Fetching location {}", id);
         final Location loc = repository.findById(id);
+
         if (loc == null) {
             log.warn("Location {} not found", id);
             throw new ResourceNotFoundException("Location not found: " + id);
         }
+
         return loc;
     }
 
     @Override
     public Location create(Location location) {
-        log.info("Creating location…");
+        log.info("Creating new location");
 
         if (location.getRentedProperty() == null)
             throw new BadRequestException("Rented property is required");
@@ -56,16 +58,20 @@ public class LocationServiceImpl implements ServiceInterface<Location> {
         location.getRentedProperty().setAvailable(false);
 
         repository.save(location);
-
         log.info("Location {} created successfully", location.getId());
+
         return location;
     }
 
     @Override
     public Location update(Location location) {
         log.info("Updating location {}", location.getId());
-        getById(location.getId());
+
+        getById(location.getId()); // Vérifie existence
+
         repository.save(location);
+        log.info("Location {} updated", location.getId());
+
         return location;
     }
 
@@ -83,8 +89,11 @@ public class LocationServiceImpl implements ServiceInterface<Location> {
 
     public void pay(UUID id, double amount) {
         log.info("Processing payment of {} for location {}", amount, id);
-        final Location loc = getById(id);
 
+        if (amount <= 0)
+            throw new BadRequestException("Amount must be positive");
+
+        final Location loc = getById(id);
         loc.pay(amount);
         repository.save(loc);
 
@@ -92,7 +101,7 @@ public class LocationServiceImpl implements ServiceInterface<Location> {
     }
 
     public void returnItem(UUID id) {
-        log.info("Returning rented item for location {}", id);
+        log.info("Returning item for location {}", id);
         final Location loc = getById(id);
 
         loc.returnItem();
